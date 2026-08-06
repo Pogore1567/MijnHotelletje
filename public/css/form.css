@@ -1,0 +1,209 @@
+body{
+place-items: center;
+position: relative;
+display: grid;
+height: 95vh;
+}
+.form{
+width: 30%;
+height: 550px;
+border: 4px solid rgb(0, 89, 255);
+border-radius: 20px;
+box-shadow: 0 0 8px 4px rgba(0, 0, 0, 0.4);
+display: grid;
+place-items: center;
+}
+.form_content{
+width: 100%;
+display: grid;
+place-items: center;
+}
+.login_register_form{
+width: 30%;
+height: 600px;
+border: 4px solid rgb(0, 89, 255);
+border-radius: 20px;
+box-shadow: 0 0 8px 4px rgba(0, 0, 0, 0.4);
+}
+.price{
+font-size: 30px;
+font-weight: bold;
+}
+.ul{
+padding:0;
+list-style-type: none;
+display: grid;
+align-items: center;
+width: 100%; 
+}
+.flex_1{
+flex:15%;
+display: grid;
+place-items: center;
+}
+.flex_2{
+top: 25%;
+width:100%;
+display: grid;
+place-items: center;
+}
+div{
+width: 100%;  
+margin-top: 0px;
+display: grid;
+place-items: center;
+margin-top: 25px
+}
+.input_name{
+width: 80%;  
+margin-top: 0px;
+display: flex;
+justify-content: start;
+}
+.form_head{
+width: 100%;  
+margin-top: 0px;
+display: grid;
+place-items: center;
+margin-top: 60px
+}
+.form_name{
+font-size: 34px;
+font-weight: bold;
+font-family: "IBM Plex Sans", sans-serif;
+margin-top: 15px;
+}
+p{
+font-size: 28px;
+margin-block-start: 0.5em;
+margin-block-end: 0.5em;
+font-family: "IBM Plex Sans", sans-serif;
+}
+.admin_login{
+font-size: 20px;
+}
+input{
+height: 35px;
+width: 100%;
+font-size: 22px;
+padding-left: 10px;
+padding-right: 10px;
+border: 2px solid rgb(0, 89, 255);
+border-radius: 10px;
+}
+.user_data{
+height: 35px;
+width: 75%;
+font-size: 20px;
+padding-left: 10px;
+padding-right: 10px;
+border: 2px solid rgb(0, 89, 255);
+border-radius: 10px;
+}
+.input_comment{
+min-height: 140px;
+line-height: 1.4;
+width: 75%;
+font-size: 20px;
+padding: 10px;
+border: 2px solid rgb(0, 89, 255);
+border-radius: 10px;
+}
+.input_persons{
+width: 50px;
+display: flex;
+}
+.input_rating{
+width: 50px;
+height: 35px;
+border: 2px solid rgb(0, 89, 255);
+border-radius: 10px;
+font-size: 22px;
+padding-left: 10px;
+padding-right: 10px;
+}
+.rating_center{
+width: 80%;
+display: flex;
+align-items: start;
+margin-top: 0
+}
+input::-webkit-outer-spin-button, input::-webkit-inner-spin-button{
+-webkit-appearance: none;
+}
+.button_center{
+display: flex;
+justify-content: center;
+margin-top: 0px;
+gap: 20px;
+margin-top: 40px
+}
+.button_center_login{
+display: flex;
+justify-content: center;
+margin-top: 40px;
+gap: 20px
+}
+.booking_button{
+height: 45px;
+width: 125px;
+font-size: 18px;
+border: 2px solid rgb(0, 89, 255);
+background-color: rgb(255, 255, 255);
+color: rgb(0, 89, 255);
+border-radius: 10px;
+}
+.terug_button{
+height: 45px;
+width: 125px;
+font-size: 18px;
+border: 2px solid rgb(0, 89, 255);
+background-color: rgb(255, 255, 255);
+color: rgb(0, 89, 255);
+border-radius: 10px;
+display: grid;
+place-items: center;
+text-decoration: none;
+font-family: "IBM Plex Sans", sans-serif;
+}
+:hover.booking_button{
+background-color: rgb(0, 89, 255);
+color: white;
+}
+:hover.terug_button{
+background-color: rgb(0, 89, 255);
+color: white;
+}
+.quantity{
+display: flex;
+gap: 25px;
+place-items: center;
+margin-top: 0px;
+width: 80%;
+}
+.controllers{
+display: flex;
+margin-top: 0;
+}
+.plus{
+font-size: 25px;
+width: 100px;
+background-color: rgb(8, 146, 12);
+border: 0;
+color: white;
+}
+.min{
+font-size: 25px;
+width: 100px;
+background-color: rgb(146, 7, 7);
+border: 0;
+color: white;
+}
+.li{
+margin-top: 20px
+}
+.error_message{
+font-size: 20px;
+margin-top: 155px;
+position: absolute;
+}
