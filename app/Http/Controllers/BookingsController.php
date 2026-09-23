@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\BookingModel;
+use App\Models\RoomModel;
 use App\Models\HotelModel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -16,9 +17,9 @@ class BookingsController extends Controller
     public function index(){;
 
      if(auth()->user()?->is_admin){
-        $bookings = BookingModel::with('hotel')->get();
+        $bookings = BookingModel::with('room.hotel')->get();
      }elseif(auth()->check()){
-        $bookings = BookingModel::with('hotel')->where('user_id', auth()->id())->get();
+        $bookings = BookingModel::with('room')->where('user_id', auth()->id())->get();
      } else{
         return redirect()->route('show_login');
      }
@@ -27,21 +28,25 @@ class BookingsController extends Controller
     }
  
 
-    public function create(Request $request, $hotel_id,){
+    public function create(Request $request, $room_id,){
 
-         $hotel = HotelModel::findOrFail($hotel_id);
+         $room = RoomModel::findOrFail($room_id);
          if (!$request->filled('check_in') && !session()->has('persons')) {
         session()->forget(['check_in', 'check_out', 'persons', 'total_price']);
     }
-         $TotalPrice = $hotel->price;
+         $TotalPrice = $room->price;
 
-        return view('create_booking', ['hotel' => $hotel, 'total_price'=> $TotalPrice] );
+        return view('create_booking', ['room' => $room, 'total_price'=> $TotalPrice] );
     }
     public function store(Request $request, BookingService $service){
         
+    $room = RoomModel::findOrFail($request->input('room_id'));
+    $data = $request->all();
+    $data['hotel_id'] = $room->hotel_id;
 
-    $validator = Validator::make($request->all(), [
+    $validator = Validator::make($data, [
         'hotel_id' => 'required',
+        'room_id' => 'required',
         'check_in'  => 'required|date|after_or_equal:today',
         'check_out' => 'required|date|after:check_in',
         'persons' => 'required',
@@ -49,13 +54,14 @@ class BookingsController extends Controller
 
         [
         'hotel_id.required' => 'Must have',
+        'room_id.required' => 'Must have',
         'check_in.required' => 'Must have',
         'check_out.required' => 'Must have',
         'persons.required' => 'Must have' ,
         'check_in.after_or_equal' => 'Kan niet vroeger dan vandaag zijn!',
         'check_out.after' => 'Kan niet vroeger dan de aankomstdatum zijn!',
          ]);
-
+    
     
     if($validator->fails()){
         return redirect()->back()->withErrors($validator);
@@ -73,7 +79,7 @@ class BookingsController extends Controller
     public function plus(Request $request, BookingService $service){
 
     $service->plus([
-        'hotel_id'  => $request->hotel_id,
+        'room_id'  => $request->room_id,
         'check_in'  => $request->check_in,
         'check_out' => $request->check_out,
         'persons'   => $request->persons,
@@ -85,7 +91,7 @@ class BookingsController extends Controller
     public function min(Request $request, BookingService $service){
 
     $service->min([
-        'hotel_id'  => $request->hotel_id,
+        'room_id'  => $request->room_id,
         'check_in'  => $request->check_in,
         'check_out' => $request->check_out,
         'persons'   => $request->persons,

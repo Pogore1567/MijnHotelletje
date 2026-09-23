@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="{{ asset('css/hotel.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="{{ asset('js/app.js') }}"></script>
       <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('css/MH.png') }}">
 
     <title>{{ $hotel->name }}</title>
@@ -70,17 +71,19 @@
             <i class="fa-regular fa-star" style="color: gold;"></i>
     @endfor </p>  
 
-      <p class="hotel_adress"><a href= "{{ route('reviews', ['hotel_id' => $hotel->id]) }}">Reviews</a></p>
      </div>
       <p class="hotel_description">{{ $hotel->description }}</p>
-      <p class="hotel_price">€{{ number_format($hotel->price, 2, ',', '') }}/night</p>
         <li class="button_center">
-      <form action = "{{ route('booking_create', ['hotel_id' => $hotel->id] ) }}" method = "GET">
+          
+      <form action = "{{ route('rooms', ['hotel_id' => $hotel->id] ) }}" method = "GET">
     @csrf
-    <button type = "submit" class="booking_button">Booking</button>
-     </form>
-     <form action = "{{ route('review_create', ['hotel_id' => $hotel->id] ) }}" method = "GET">
+    <input type="hidden" name="hotel_id" value="{{ $hotel->id }}">
+    <button type = "submit" class="booking_button">Rooms</button>
+    </form>
+
+     <form action = "{{ route('reviews_hotels', ['hotel_id' => $hotel->id] ) }}" method = "GET">
     @csrf
+    <input type="hidden" name="hotel_id" value="{{ $hotel->id }}">
     <button type = "submit" class="booking_button">Review</button>
     </form>
        </li>
@@ -152,15 +155,6 @@
     
 </div>
 </div>
-
-<script>
-function openNav(){
-  document.getElementById("header").style.width = "250px";
-}
-function closeNav(){
-  document.getElementById("header").style.width = "0px";
-}
-</script>
 
 @if(auth()->user()?->is_admin)
 <form action = "{{ route('amenity_store') }}" method = "POST">

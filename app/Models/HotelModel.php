@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class HotelModel extends Model
 {
     protected $table = 'hotels';
-    protected $fillable = ['name', 'price', 'adres', 'description', 'image', 'places'];
+    protected $fillable = ['name', 'adres', 'description', 'image'];
     
     public function bookings(){
     return $this->hasMany(BookingModel::class, 'hotel_id'); 
@@ -24,6 +24,9 @@ public function meals(){
 }
 public function rules(){
     return $this->hasMany(RulesModel::class, 'hotel_id'); 
+}
+public function rooms(){
+    return $this->hasMany(RoomModel::class, 'hotel_id'); 
 }
 }
 

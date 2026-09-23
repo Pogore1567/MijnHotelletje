@@ -26,14 +26,14 @@ justify-content: center;
 }
 .hotel_image{
 width: 100%;
-height: 450px;
+height: 350px;
 object-fit: cover;
 }
 .description{
 padding-left: 45px;
 padding-right: 45px;
 padding-bottom: 45px;
-padding-top: 45px;
+padding-top: 25px;
 border-left: 4px solid rgb(0, 89, 255);
 border-right: 4px solid rgb(0, 89, 255);
 border-bottom: 4px solid rgb(0, 89, 255);

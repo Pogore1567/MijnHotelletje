@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BookingsController;
 use App\Http\Controllers\HotelController;
+use App\Http\Controllers\RoomController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AmenitiesController;
@@ -16,21 +17,33 @@ Route::get('/', [HotelController::class, 'index']);
 
 Route::get('/hotels', [HotelController::class, 'index'])->name('hotels');
 Route::get('/hotel_show/{id}', [HotelController::class, 'show'])->name('hotel');
-Route::get('/hotel/{id}', [HotelController::class, 'show_update'])->name('show_update');
+Route::get('/hotel/{id}', [HotelController::class, 'show_update'])->name('show_hotel_update');
 Route::post('/hotel_store', [HotelController::class, 'store'])->middleware('admin')->name('hotel_store');
 Route::post('/hotel_update/{id}', [HotelController::class, 'update'])->middleware('admin')->name('hotel_update');
 Route::delete('/hotel/{id}', [HotelController::class, 'destroy'])->middleware('admin')->name('hotel_delete');
 
+Route::get('/rooms', [RoomController::class, 'index'])->name('rooms');
+Route::get('/room_show/{id}', [RoomController::class, 'show'])->name('room');
+Route::get('/room/{id}', [RoomController::class, 'show_update'])->name('show_room_update');
+Route::post('/room_store/{hotel_id}', [RoomController::class, 'store'])->middleware('admin')->name('room_store');
+Route::post('/room_update/{id}', [RoomController::class, 'update'])->middleware('admin')->name('room_update');
+Route::delete('/room/{id}', [RoomController::class, 'destroy'])->middleware('admin')->name('room_delete');
+
 Route::get('/bookings', [BookingsController::class, 'index'])->name('bookings');
 Route::get('/booking', [BookingsController::class, 'show']);
-Route::get('/booking_create/{hotel_id}', [BookingsController::class, 'create'])->name('booking_create');
+Route::get('/booking_create/{room_id}', [BookingsController::class, 'create'])->name('booking_create');
 Route::post('/booking_store', [BookingsController::class, 'store'])->middleware('custom.auth')->name('booking_store');
 Route::delete('/booking/{id}', [BookingsController::class, 'destroy'])->middleware('custom.auth')->name('booking_delete');
 
-Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews');
-Route::get('/review_create/{hotel_id}', [ReviewController::class, 'create'])->middleware('custom.auth')->name('review_create');
-Route::post('/review_store/{hotel_id}', [ReviewController::class, 'store'])->name('review_store');
-Route::delete('/review/{id}', [ReviewController::class, 'destroy'])->name('review_delete');
+
+Route::get('/reviews/hotel', [ReviewController::class, 'index_for_hotels'])->name('reviews_hotels');
+Route::post('/review_store/hotel/{hotel_id}', [ReviewController::class, 'store_for_hotels'])->middleware('custom.auth')->name('review_hotel_store');
+Route::delete('/review/hotel/{id}', [ReviewController::class, 'destroy_for_hotels'])->name('review_hotel_delete');
+
+Route::get('/reviews/room', [ReviewController::class, 'index_for_rooms'])->name('reviews_rooms');
+Route::post('/review_store/room/{room_id}', [ReviewController::class, 'store_for_rooms'])->middleware('custom.auth')->name('review_room_store');
+Route::delete('/review/room/{room_id}', [ReviewController::class, 'destroy_for_rooms'])->name('review_room_delete');
+
 
 Route::get('/registration', [UserController::class, 'show_register'])->name('show_registration');;
 Route::get('/login', [UserController::class, 'show_login'])->name('show_login');

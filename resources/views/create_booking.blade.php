@@ -4,21 +4,19 @@
        <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('css/form.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
+
       <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('css/MH.png') }}">
 
-    <title>Bookings: {{$hotel->name}}</title>
+    <title>Booking: {{$room->room_number}}</title>
 </head>
 <body>
-    <h class="price">Totaal: €{{ number_format(session('total_price',$hotel->price), 2, ',', '') }}</h>
+    <h class="price">Totaal: €{{ number_format(session('total_price', $room->price), 2, ',', '') }}</h>
 
     <form action = "{{ route('booking_store')}}" method = "POST" class="form">
         @csrf
         
-
-
-        
         <div>
-        <input type="hidden" name = "hotel_id" value="{{$hotel->id}}">
+        <input type="hidden" name = "room_id" value="{{$room->id}}">
      <div>
         <div class="li">
 
@@ -54,11 +52,13 @@
       </li>
     </ul>
     </div>
-
-    @if (session('error'))
+  @if ($errors->any)
+   @foreach($errors->all() as $error)
     <div class="alert alert-danger">
-        {{ session('error') }}
+        {{ $error }}
     </div>
+    
+@endforeach
 @endif
 </form>
 

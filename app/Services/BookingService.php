@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Models\BookingModel;
-use App\Models\HotelModel;
+use App\Models\RoomModel;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -13,11 +13,28 @@ class BookingService
     /**
      * Create a new class instance.
      */
+
+    public function avaliablePlaces($room, $check_in, $check_out){
+
+    $check_in = $check_in ? Carbon::parse($check_in) : Carbon::today();
+    $check_out = $check_out ? Carbon::parse($check_out) : Carbon::tomorrow();
+
+    $occupiedPlaces = BookingModel::where('room_id', $room->id)
+            ->where(function ($query) use ($check_in, $check_out) {
+                $query->where('check_in', '<=', $check_out)
+                      ->where('check_out', '>=', $check_in);
+            })
+            ->sum('persons');
+
+            return $room->places - $occupiedPlaces;      
+    }
+
    public function create(array $data)
     {
         
         $validator = Validator::make($data, [
             'hotel_id' => 'required',
+            'room_id' => 'required',
             'check_in'  => 'required|date|after_or_equal:today',
             'check_out' => 'required|date|after:check_in',
             'persons' => 'required',
@@ -27,7 +44,7 @@ class BookingService
             throw new \Exception($validator->errors()->first());
         }
 
-        $hotel = HotelModel::findOrFail($data['hotel_id']);
+        $room = RoomModel::findOrFail($data['room_id']);
         $check_in = Carbon::parse($data['check_in']);
         $check_out = Carbon::parse($data['check_out']);
         $today = Carbon::today();
@@ -42,38 +59,30 @@ class BookingService
 
         $nights = max(1, $check_in->diffInDays($check_out));
 
-        $places = $hotel->places;
         $requestedPlaces = $data['persons'];
+        
+        $avaliablePlaces = $this->avaliablePlaces($room, $check_in, $check_out);
 
-        $occupiedPlaces = BookingModel::where('hotel_id', $hotel->id)
-            ->where(function ($query) use ($check_in, $check_out) {
-                $query->where('check_in', '<', $check_out)
-                      ->where('check_out', '>', $check_in);
-            })
-            ->sum('persons');
-
-        $availablePlaces = $places - $occupiedPlaces;
-
-        if ($requestedPlaces > $availablePlaces) {
+        if ($requestedPlaces > $avaliablePlaces) {
             throw new \Exception('Er zijn weinig plekken');
         }
 
-        $totalPrice = $nights * $requestedPlaces * $hotel->price;
+        $totalPrice = $nights * $requestedPlaces * $room->price;
 
         return BookingModel::create([
-            'hotel_id' => $hotel->id,
+            'room_id' => $room->id,
             'user_id' => Auth::id(),
             'check_in' => $check_in->toDateString(),
             'check_out' => $check_out->toDateString(),
             'persons' => $requestedPlaces,
             'total_price' => $totalPrice,
-            'places' => $occupiedPlaces,
+            'places' => $requestedPlaces,
         ]);
     }
 
     public function plus(array $data){
 
-        $hotel = HotelModel::findOrFail($data['hotel_id']);
+        $room = RoomModel::findOrFail($data['room_id']);
         $check_in = Carbon::parse($data['check_in']);
         $check_out = Carbon::parse($data['check_out']);
         $nights = $check_in->diffInDays($check_out);
@@ -87,7 +96,7 @@ class BookingService
         $nights = 1;
     }
 
-        $TotalPrice = $nights * $persons * $hotel->price;
+        $TotalPrice = $nights * $persons * $room->price;
 
         session([
         'persons' => $persons, 
@@ -99,7 +108,7 @@ class BookingService
 
     public function min(array $data){
 
-        $hotel = HotelModel::findOrFail($data['hotel_id']);
+        $room = RoomModel::findOrFail($data['room_id']);
         $check_in = Carbon::parse($data['check_in']);
         $check_out = Carbon::parse($data['check_out']);
         $nights = $check_in->diffInDays($check_out);
@@ -113,7 +122,7 @@ class BookingService
         $nights = 1;
     }
 
-        $TotalPrice = $nights * $persons * $hotel->price;
+        $TotalPrice = $nights * $persons * $room->price;
 
         session([
         'persons' => $persons, 

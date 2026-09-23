@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Config;
 
 class UserController extends Controller
 {
@@ -74,7 +75,7 @@ class UserController extends Controller
 
     public function admin(Request $request){
 
-    $admin_password = 'rulymo_ta_investuyemo';
+    $admin_password = config('app.admin_password');
     
         if($request->input('admin_password') !== $admin_password){
             return back()->withErrors(['admin_password'=> 'U bent geen admin']);

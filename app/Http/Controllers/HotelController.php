@@ -18,14 +18,21 @@ class HotelController extends Controller
 {
     public function index(Request $request, WeatherService $weatherService)
 {
-    $time = Carbon::now()->format('H:i');;
+    $time = Carbon::now()->format('H:i');
+    $rating = $request->input('min_rating');
 
-    $query = HotelModel::withAvg('reviews', 'rating');
+    $query = HotelModel::withAvg('reviews', 'rating')
      
-    if ($request->filled('search_hotel')) {
+    ->when($request->filled('search_hotel'), function($query) use ($request) {
         $search = $request->input('search_hotel');
         $query->where('name', 'like', "%{$search}%");
-    }
+    })
+
+    ->when($request->filled('min_rating'), function($query) use ($request, $rating) {
+        
+        $query->whereHas('reviews', function($q) use ($rating) { $q->groupBy('hotel_id')->havingRaw("AVG(rating) >= $rating"); } );
+    });
+    
 
     $hotels = $query->get();
     $weatherData = $weatherService->weather($request);
@@ -67,8 +74,6 @@ class HotelController extends Controller
     $validator = Validator::make($request->all(), [
         'name' => 'required',
         'adres' => 'required',
-        'price' => 'required',
-        'places' => 'required',
         'description' => 'required',
         'image' => 'required|image|mimes:jpg,jpeg,png',
         ],
@@ -77,8 +82,6 @@ class HotelController extends Controller
         'name.required' => 'Must have',
         'adres.required' => 'Must have',
         'description.required' => 'Must have',
-        'price.required' => 'Must have',
-        'places.required' => 'Must have',
         ] 
     );
     
@@ -105,7 +108,6 @@ class HotelController extends Controller
     $validator = Validator::make($request->all(), [
         'name' => 'required',
         'adres' => 'required',
-        'price' => 'required',
         'description' => 'required',
         'image' => 'required|image|mimes:jpg,jpeg,png',
         ],
@@ -114,7 +116,7 @@ class HotelController extends Controller
         'name.required' => 'Must have',
         'adres.required' => 'Must have',
         'description.required' => 'Must have',
-        'price.required' => 'Must have',
+
         ] 
     );
     

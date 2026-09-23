@@ -66,7 +66,7 @@ return [
     */
 
     'timezone' => env('APP_TIMEZONE', 'UTC'),
-
+    'admin_password' => env('ADMIN_PASSWORD'),
     /*
     |--------------------------------------------------------------------------
     | Application Locale Configuration

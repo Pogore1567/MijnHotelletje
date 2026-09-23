@@ -63,7 +63,8 @@
       <p class="user_name_bookings">{{ $booking->user->name }}</p>
       <p class ="user_email">{{ $booking->user->email }}</p>
       <div class="user_attributes">
-      <p>Hotel: {{ $booking->hotel->name }}</p>
+      <p>Hotel: {{ $booking->room->hotel->name }}</p>
+      <p>Room: {{ $booking->room->room_number }}</p>
       <p>Persons: {{ $booking->persons }}</p>
       <p>Total price: €{{ number_format($booking->total_price, 2, ',', '') }}</p>
       </div>

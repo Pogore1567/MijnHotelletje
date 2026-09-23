@@ -6,9 +6,10 @@
     <link rel="stylesheet" href="{{ asset('css/hotels.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="{{ asset('js/app.js') }}"></script>
        <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('css/MH.png') }}">
 
-    <title>Mijn Hotelletje</title>
+    <title>Hotels</title>
 </head>
 
 <body>
@@ -54,14 +55,19 @@
     <?php endif; ?>
     </div>
 
-  <div class="head">
+  <div class="head_hotels">
 
 <form action="{{ route('hotels') }}" method="GET">
-    <div class = "input">
-      <input type="text" name="search_hotel" class="search" placeholder="Hotel name">
+    <div class = "input_hotels">
+
+      <input type="text" name="search_hotel" class="search_hotels" placeholder="Hotel name">
+      <div class ="search_actions">
       <button type="submit" class="button_search"><img src ="{{ asset('css/search.png') }}" class = "search_icon"></button>
      </div> 
+     
+    </div>
     </form>
+
   </div>
   
   @if ($hotels->isEmpty())
@@ -136,21 +142,21 @@
     @endfor </p>  
 
 
-      <p class="hotel_adress"><a href= "{{ route('reviews', ['hotel_id' => $hotel->id]) }}" class="links">Reviews</a></p>
      </div>
       <p class="hotel_description"><a href = "{{ route('hotel', $hotel->id) }}" class="links">More</a></p>
 
       <div class="actions">
-      <p class="hotel_price">€{{ number_format($hotel->price, 2, ',', '') }}/night</p>
   
       <li class="button_center">
-      <form action = "{{ route('booking_create', ['hotel_id' => $hotel->id] ) }}" method = "GET">
+      <form action = "{{ route('rooms', ['hotel_id' => $hotel->id] ) }}" method = "GET">
     @csrf
-    <button type = "submit" class="booking_button">Booking</button>
+    <input type="hidden" name="hotel_id" value="{{ $hotel->id }}">
+    <button type = "submit" class="booking_button">Rooms</button>
     </form>
 
-<form action = "{{ route('review_create', ['hotel_id' => $hotel->id] ) }}" method = "GET">
+<form action = "{{ route('reviews_hotels', ['hotel_id' => $hotel->id] ) }}" method = "GET">
     @csrf
+    <input type="hidden" name="hotel_id" value="{{ $hotel->id }}">
     <button type = "submit" class="booking_button">Review</button>
 </form>
 </li>
@@ -161,7 +167,7 @@
     @method('DELETE')
     <button type = "submit">Delete</button>
 </form>
- <form action = "{{ route('show_update', $hotel->id) }}" method = "GET">
+ <form action = "{{ route('show_hotel_update', $hotel->id) }}" method = "GET">
     @csrf
     <button type = "submit">Edit</button>
 </form>
@@ -181,10 +187,6 @@
     <input type="text" name = "adres" required>
     <label>Description</label>
     <input type="text" name = "description" required>
-    <label>Price</label>
-    <input type="decimal" name = "price" required min = "0" step="0.01">
-    <label>Places</label>
-    <input type="number" name = "places" required min = "0" step="1">
     <label>Image</label>
     <input type="file" name = "image" id = "image" accept="image/*">
     
@@ -192,30 +194,7 @@
 </form>
 </div>
 @endif
-<script>
-function openNav(){
-  document.getElementById("header").style.width = "250px";
-}
-function closeNav(){
-  document.getElementById("header").style.width = "0px";
-}
-</script>
 
-<script>
-    function startClock() {
-        const clockElement = document.getElementById('live-clock');
-        
-        setInterval(() => {
-            const now = new Date();
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            
-            clockElement.textContent = ${hours}:${minutes};
-        }, 1000);
-    }
-    
-    document.addEventListener('DOMContentLoaded', startClock);
-</script>
 
 </body>
 
